@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../../axios';
 
 import Post from '../../components/Post/Post';
 import FullPost from '../../components/FullPost/FullPost';
@@ -12,7 +13,8 @@ import './Blog.css';
 class Blog extends Component {
     state = {
         posts: [],
-        selectedPostId: null
+        selectedPostId: null,
+        error: false
     }
     // componentDidMount is the best place to send HTTP requests
     // cannot store get request results in a constant because javaScript
@@ -23,7 +25,7 @@ class Blog extends Component {
     // axios.get() request has completed. The function inside then() recieves
     // a response object as an input.
     componentDidMount () {
-        axios.get('https://jsonplaceholder.typicode.com/posts')
+        axios.get('/posts')
             .then(response => {
                 // transform data after recieving to limit number of
                 // posts displayed.
@@ -39,7 +41,12 @@ class Blog extends Component {
                 this.setState({posts: updatedPosts});
                 // this.setState({posts: response.data});
                 // console.log( response );
-            });
+            })
+            .catch(error => {
+                this.setState({error: true})
+                //console.log(error);
+            })
+
     }
 
     postSelectedHandler = (id) => {
@@ -47,14 +54,16 @@ class Blog extends Component {
     }
 
     render () {
-        const posts = this.state.posts.map(post => {
-            return <Post
-                key={post.id}
-                title={post.title}
-                author={post.author}
-                clicked={() => this.postSelectedHandler(post.id)} />
-        });
-
+        let posts = <p style={{textAlign: 'center'}}>Something Went Wrong...</p>
+        if (!this.state.error) {
+            posts = this.state.posts.map(post => {
+                return <Post
+                    key={post.id}
+                    title={post.title}
+                    author={post.author}
+                    clicked={() => this.postSelectedHandler(post.id)} />
+            });
+        }
         return (
             <div>
                 <section className="Posts">
