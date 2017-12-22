@@ -20,3 +20,9 @@
 .Blog a:active {
     color: red;
 }
+.Blog a.active {
+    color: green;
+}
+.Blog a.my-active {
+    color: green;
+}

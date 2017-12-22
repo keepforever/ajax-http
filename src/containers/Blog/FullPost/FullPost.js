@@ -11,13 +11,14 @@ class FullPost extends Component {
     // here we will use axios.get, but the url has to target the specific
     // post object which we want to display the properties of in the full
     // post.
-    componentDidUpdate () {
-        if (this.props.id) {
+    componentDidMount () {
+        console.log("[Full Post]", this.props)
+        if (this.props.match.params.id) {
             // we will get an infinite loop if we don't add a check to make sure
             // that we only send a GET request when loading a new post id.
             if ( !this.state.loadedPost || (this.state.loadedPost &&
                                             this.state.loadedPost.id !== this.props.id) ) {
-                axios.get('/posts/' + this.props.id)
+                axios.get('/posts/' + this.props.match.params.id)
                     .then(response =>{
                         //console.log(response);
                         this.setState({loadedPost: response.data});
@@ -27,7 +28,7 @@ class FullPost extends Component {
     }
 
     deletePostHandler = () => {
-        axios.delete( '/posts/' + this.props.id )
+        axios.delete( '/posts/' + this.props.match.params.id )
             .then(response => {
                 console.log(response);
             });

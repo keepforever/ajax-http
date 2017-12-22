@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import axios from '../../../axios';
 import Post from '../../../components/Post/Post';
+import { Link } from 'react-router-dom';
+// here we use Link instead of NavLink because we do not plan on styling
+// the active link.
 
 import './Posts.css';
 
@@ -18,6 +21,8 @@ class Posts extends Component {
 // axios.get() request has completed. The function inside then() recieves
 // a response object as an input.
     componentDidMount () {
+        // logging props here to see decorations from React Router
+        console.log(this.props);
         axios.get('/posts')
             .then(response => {
                 // transform data after recieving to limit number of
@@ -50,11 +55,14 @@ class Posts extends Component {
         let posts = <p style={{textAlign: 'center'}}>Something Went Wrong...</p>
         if (!this.state.error) {
             posts = this.state.posts.map(post => {
-                return <Post
-                    key={post.id}
-                    title={post.title}
-                    author={post.author}
-                    clicked={() => this.postSelectedHandler(post.id)} />
+                return (
+                    <Link to={'/' + post.id} key={post.id}>
+                        <Post
+                            title={post.title}
+                            author={post.author}
+                            clicked={() => this.postSelectedHandler(post.id)} />
+                    </Link>
+                );
             });
         }
 
@@ -68,3 +76,7 @@ class Posts extends Component {
 };
 
 export default Posts;
+
+// since link is our outer element that's getting created by the
+// map function, the key property should be passed to it so it will
+// have a unique key
